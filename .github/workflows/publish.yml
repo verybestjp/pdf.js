@@ -1,0 +1,25 @@
+name: Node.js Package
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git config --global user.name 'ci'
+    - run: git config --global user.email 'system@kailash-tech.jp'
+    - run: npm version patch -m "[RELEASE] %s"
+    - run: git push
+    - name: rm .npmrc file # コミットされてるのは package readの権限だけなので削除する(setup-nodeで新たに作成されるため)
+      run: |
+        rm -f .npmrc
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '16'
+        registry-url: 'https://npm.pkg.github.com'
+    - run: |
+        npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

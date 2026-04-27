@@ -1,5 +1,6 @@
 {
-  "name": "pdf.js",
+  "name": "@verybestjp/pdf.js",
+  "version": "5.5.207",
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.29.0",
