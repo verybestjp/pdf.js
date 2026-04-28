@@ -7,7 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - run: git config --global user.name 'ci'
     - run: git config --global user.email 'system@kailash-tech.jp'
     - run: npm version patch -m "[RELEASE] %s"
@@ -15,7 +17,7 @@ jobs:
     - name: rm .npmrc file # コミットされてるのは package readの権限だけなので削除する(setup-nodeで新たに作成されるため)
       run: |
         rm -f .npmrc
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '20.19.0'
         registry-url: 'https://npm.pkg.github.com'
