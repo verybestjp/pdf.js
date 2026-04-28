@@ -68,7 +68,7 @@ async function initPdfFindController(
 
   let FindControllerClass = PDFFindController;
   if (matcher !== undefined) {
-    FindControllerClass = class extends PDFFindController {};
+    FindControllerClass = class extends PDFFindController { };
     FindControllerClass.prototype.match = matcher;
   }
 
@@ -304,7 +304,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "Government",
+        query: '"Government"',
         entireWord: true,
       },
       matchesPerPage: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
@@ -346,6 +346,25 @@ describe("pdf_find_controller", function () {
         query: ["alternate solution", "solution"],
       },
       matchesPerPage: [0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0],
+      selectedMatch: {
+        pageIndex: 5,
+        matchIndex: 0,
+      },
+    });
+  });
+
+  it("performs a multiple term (no phrase) search with string input", async function () {
+    // Page 9 contains 'alternate' and pages 6 and 9 contain 'solution'.
+    // Both should be found for multiple term (no phrase) search.
+    const { eventBus, pdfFindController } = await initPdfFindController();
+
+    await testSearch({
+      eventBus,
+      pdfFindController,
+      state: {
+        query: "alternate solution",
+      },
+      matchesPerPage: [0, 0, 0, 0, 0, 1, 0, 0, 4, 0, 0, 0, 0, 0],
       selectedMatch: {
         pageIndex: 5,
         matchIndex: 0,
@@ -540,7 +559,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "user experience",
+        query: '"user experience"',
       },
       matchesPerPage: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       selectedMatch: {
@@ -559,7 +578,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "version.the",
+        query: '"version.the"',
       },
       matchesPerPage: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       selectedMatch: {
@@ -578,7 +597,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "trace-based  just-in-time",
+        query: '"trace-based  just-in-time"',
       },
       matchesPerPage: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       selectedMatch: {
@@ -627,7 +646,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "[Programming Languages]",
+        query: '"[Programming Languages]"',
       },
       matchesPerPage: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       selectedMatch: {
@@ -646,7 +665,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "\t   (checks)",
+        query: '"\t   (checks)"',
       },
       matchesPerPage: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       selectedMatch: {
@@ -662,7 +681,7 @@ describe("pdf_find_controller", function () {
     const { eventBus, pdfFindController } = await initPdfFindController();
 
     // The whitespace after the dot mustn't be matched.
-    const query = "complex applications.";
+    const query = '"complex applications."';
 
     await testSearch({
       eventBus,
@@ -684,7 +703,7 @@ describe("pdf_find_controller", function () {
     const { eventBus, pdfFindController } = await initPdfFindController();
 
     // The whitespace after the dot must be matched.
-    const query = "complex applications.J";
+    const query = '"complex applications.J"';
 
     await testSearch({
       eventBus,
@@ -704,7 +723,7 @@ describe("pdf_find_controller", function () {
 
   it("performs a search with a dot followed by a whitespace in the query", async function () {
     const { eventBus, pdfFindController } = await initPdfFindController();
-    const query = "complex applications. j";
+    const query = '"complex applications. j"';
 
     await testSearch({
       eventBus,
@@ -773,7 +792,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "안녕하세요 세계",
+        query: '"안녕하세요 세계"',
       },
       matchesPerPage: [1],
       selectedMatch: {
@@ -982,7 +1001,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "\u0629",
+        query: '"\u0629"',
       },
       matchesPerPage: [4],
       selectedMatch: {
@@ -997,7 +1016,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "\ufe94",
+        query: '"\ufe94"',
       },
       matchesPerPage: [4],
       selectedMatch: {
@@ -1018,7 +1037,7 @@ describe("pdf_find_controller", function () {
       eventBus,
       pdfFindController,
       state: {
-        query: "f",
+        query: '"f"',
       },
       matchesPerPage: [9],
       selectedMatch: {
@@ -1180,7 +1199,8 @@ describe("pdf_find_controller", function () {
 
   describe("custom matcher", () => {
     it("calls to the matcher with the right arguments", async () => {
-      const QUERY = "Foo  bar";
+      const QUERY = '"Foo  bar"';
+      const EXPECTED_QUERY = "Foo  bar";
 
       const spy = jasmine
         .createSpy("custom find matcher")
@@ -1206,7 +1226,7 @@ describe("pdf_find_controller", function () {
 
       for (let i = 0; i < PAGES_COUNT; i++) {
         const args = spy.calls.argsFor(i);
-        expect(args[0]).withContext(`page ${i}`).toBe(QUERY);
+        expect(args[0]).withContext(`page ${i}`).toBe(EXPECTED_QUERY);
         expect(args[2]).withContext(`page ${i}`).toBe(i);
       }
 
@@ -1217,26 +1237,27 @@ describe("pdf_find_controller", function () {
     });
 
     it("uses the results returned by the custom matcher", async () => {
-      const QUERY = "Foo  bar";
+      const QUERY = '"Foo  bar"';
+      const EXPECTED_QUERY = "Foo  bar";
 
       // prettier-ignore
       const spy = jasmine.createSpy("custom find matcher")
         .and.returnValue(undefined)
-        .withArgs(QUERY, jasmine.anything(), 0)
-          .and.returnValue([
-            { index: 20, length: 3 },
-            { index: 50, length: 8 },
-          ])
-        .withArgs(QUERY, jasmine.anything(), 2)
-          .and.returnValue([
-            { index: 7, length: 19 }
-          ])
-        .withArgs(QUERY, jasmine.anything(), 13)
-          .and.returnValue([
-            { index: 50, length: 2 },
-            { index: 54, length: 9 },
-            { index: 80, length: 4 },
-          ]);
+        .withArgs(EXPECTED_QUERY, jasmine.anything(), 0)
+        .and.returnValue([
+          { index: 20, length: 3 },
+          { index: 50, length: 8 },
+        ])
+        .withArgs(EXPECTED_QUERY, jasmine.anything(), 2)
+        .and.returnValue([
+          { index: 7, length: 19 }
+        ])
+        .withArgs(EXPECTED_QUERY, jasmine.anything(), 13)
+        .and.returnValue([
+          { index: 50, length: 2 },
+          { index: 54, length: 9 },
+          { index: 80, length: 4 },
+        ]);
 
       const { eventBus, pdfFindController } = await initPdfFindController(
         null,
