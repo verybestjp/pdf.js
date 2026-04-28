@@ -4,7 +4,7 @@
   "type": "module",
   "publishDir": "build/dist",
   "scripts": {
-    "build": "gulp dist && npm pkg set name=@verybestjp/pdf.js --prefix build/dist"
+    "build": "gulp dist && npm pkg set name=@verybestjp/pdf.js version=$npm_package_version --prefix build/dist"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
