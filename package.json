@@ -1,6 +1,6 @@
 {
   "name": "@verybestjp/pdf.js",
-  "version": "5.5.211",
+  "version": "5.5.212",
   "type": "module",
   "publishDir": "build/dist",
   "scripts": {
