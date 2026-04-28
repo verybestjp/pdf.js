@@ -17,9 +17,12 @@ jobs:
         rm -f .npmrc
     - uses: actions/setup-node@v1
       with:
-        node-version: '16'
+        node-version: '20.19.0'
         registry-url: 'https://npm.pkg.github.com'
+    - run: npm ci
+    - run: npx gulp dist
+    - run: npm pkg set name=@verybestjp/pdf.js --prefix build/dist
     - run: |
-        npm publish
+        npm publish ./build/dist
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
