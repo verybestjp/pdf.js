@@ -1,6 +1,6 @@
 {
   "name": "@verybestjp/pdf.js",
-  "version": "5.5.208",
+  "version": "5.5.209",
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.29.0",
