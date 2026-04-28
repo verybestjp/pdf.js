@@ -1,6 +1,6 @@
 {
   "name": "@verybestjp/pdf.js",
-  "version": "5.5.210",
+  "version": "5.5.211",
   "type": "module",
   "main": "build/dist/build/pdf.mjs",
   "types": "build/dist/types/src/pdf.d.ts",
