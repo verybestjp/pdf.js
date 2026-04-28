@@ -11,16 +11,19 @@ jobs:
     - run: git config --global user.name 'ci'
     - run: git config --global user.email 'system@kailash-tech.jp'
     - run: npm version patch -m "[RELEASE] %s"
-    - run: git push
-    - name: rm .npmrc file # コミットされてるのは package readの権限だけなので削除する(setup-nodeで新たに作成されるため)
-      run: |
-        rm -f .npmrc
+    - run: git push --follow-tags
+    - name: rm .npmrc file # コミットされてるのは package read の権限だけなので削除する(setup-nodeで新たに作成されるため)
+      run: rm -f .npmrc
     - uses: actions/setup-node@v4
       with:
         node-version: '20'
         registry-url: 'https://npm.pkg.github.com'
     - run: npm ci
-    - run: npx gulp dist
-    - run: npm publish
+    - run: npm run build
+    - name: npm publish
+      run: |
+        DIR=$(node -p "require('./package.json').publishDir || '.'")
+        cd "$DIR"
+        npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

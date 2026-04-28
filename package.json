@@ -2,21 +2,9 @@
   "name": "@verybestjp/pdf.js",
   "version": "5.5.211",
   "type": "module",
-  "main": "build/dist/build/pdf.mjs",
-  "types": "build/dist/types/src/pdf.d.ts",
-  "files": [
-    "build/dist"
-  ],
-  "optionalDependencies": {
-    "@napi-rs/canvas": "^0.1.95",
-    "node-readable-to-web-readable-stream": "^0.4.2"
-  },
-  "browser": {
-    "canvas": false,
-    "fs": false,
-    "http": false,
-    "https": false,
-    "url": false
+  "publishDir": "build/dist",
+  "scripts": {
+    "build": "gulp dist && npm pkg set name=@verybestjp/pdf.js --prefix build/dist"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
