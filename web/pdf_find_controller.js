@@ -146,9 +146,9 @@ function normalize(text, options = {}) {
       /* p9 */ hasSyllables
         ? FIRST_CHAR_SYLLABLES_REG_EXP
         : // Most of the syllables belong to Hangul so there are no need
-          // to search for them in a non-Hangul document.
-          // We use the \0 in order to have the same number of groups.
-          "\\u0000",
+        // to search for them in a non-Hangul document.
+        // We use the \0 in order to have the same number of groups.
+        "\\u0000",
     ];
     normalizationRegex = new RegExp(
       regexps.map(r => `(${r})`).join("|"),
@@ -492,6 +492,17 @@ class PDFFindController {
       this._dirtyMatch = true;
     }
     this.#state = state;
+    if (typeof this.#state.query === "string") {
+      const { query } = this.#state;
+      if (query.length > 1 && query.startsWith('"') && query.endsWith('"')) {
+        this.#state.query = query.slice(1, -1);
+      } else {
+        const queryArray = query.split(/\s+/g).filter(s => s.length > 0);
+        if (queryArray.length > 1) {
+          this.#state.query = queryArray;
+        }
+      }
+    }
     if (type !== "highlightallchange") {
       this.#updateUIState(FindState.PENDING);
     }
