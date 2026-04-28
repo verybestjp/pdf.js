@@ -2,6 +2,22 @@
   "name": "@verybestjp/pdf.js",
   "version": "5.5.210",
   "type": "module",
+  "main": "build/dist/build/pdf.mjs",
+  "types": "build/dist/types/src/pdf.d.ts",
+  "files": [
+    "build/dist"
+  ],
+  "optionalDependencies": {
+    "@napi-rs/canvas": "^0.1.95",
+    "node-readable-to-web-readable-stream": "^0.4.2"
+  },
+  "browser": {
+    "canvas": false,
+    "fs": false,
+    "http": false,
+    "https": false,
+    "url": false
+  },
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
